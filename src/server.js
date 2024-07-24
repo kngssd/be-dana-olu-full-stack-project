@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 app.get("/movies/search", async (req, res) => {
     const { searchTerm } = req.query;
     const dbResult = await query(
-        "select * from movies where LOWER(name) like LOWER($1) limit 50;",
+        "select * from movies where LOWER(name) like LOWER($1) order by name ASC limit 50;",
         [`%${searchTerm}%`]
     );
     res.json(dbResult.rows);
