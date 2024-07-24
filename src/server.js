@@ -1,6 +1,5 @@
 import { app } from "./support/setupExpress.js";
 import { query } from "./support/db.js";
-import { sum } from "./sum.js";
 import { setupARouteHandlerDemonstratingValidationWithZod } from "./zodDemo/setupARouteHandlerDemonstratingValidationWithZod.js";
 
 //You should delete all of these route handlers and replace them according to your own requirements
@@ -8,12 +7,12 @@ import { setupARouteHandlerDemonstratingValidationWithZod } from "./zodDemo/setu
 app.get("/", (req, res) => {
     res.json({
         outcome: "success",
-        message: "hello world from Dana and Olu!  Try /sum/1/2 or /db-check",
+        message: "hello world from Dana and Olu!",
     });
 });
 
-//just an example route handler.  delete it.
-app.get("/sum/:a/:b", handleGETRequestForSum);
+// /movies/search?searchTerm=batman
+app.get("/movies/search", (req, res) => {});
 
 //This jsdoc comment helps vscode figure out the correct types for req and res for autocompletion, etc,
 //when it can't figure it out from context.
@@ -21,10 +20,6 @@ app.get("/sum/:a/:b", handleGETRequestForSum);
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  */
-function handleGETRequestForSum(req, res) {
-    const answer = sum(parseInt(req.params.a), parseInt(req.params.b));
-    res.json({ answer });
-}
 
 //An example route that makes an SQL query to the db.
 app.get("/db-check", async (req, res) => {
