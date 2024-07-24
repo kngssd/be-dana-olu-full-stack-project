@@ -8,7 +8,7 @@ import { setupARouteHandlerDemonstratingValidationWithZod } from "./zodDemo/setu
 app.get("/", (req, res) => {
     res.json({
         outcome: "success",
-        message: "hello world!  Try /sum/1/2 or /db-check",
+        message: "hello world from Dana and Olu!  Try /sum/1/2 or /db-check",
     });
 });
 
