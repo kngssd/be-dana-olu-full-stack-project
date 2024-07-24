@@ -12,7 +12,10 @@ app.get("/", (req, res) => {
 });
 
 // /movies/search?searchTerm=batman
-app.get("/movies/search", (req, res) => {});
+app.get("/movies/search", async (req, res) => {
+    const dbResult = await query("select * from movies limit 50");
+    res.json(dbResult.rows);
+});
 
 //This jsdoc comment helps vscode figure out the correct types for req and res for autocompletion, etc,
 //when it can't figure it out from context.
