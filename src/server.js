@@ -11,9 +11,12 @@ app.get("/", (req, res) => {
     });
 });
 
-// /movies/search?searchTerm=batman
 app.get("/movies/search", async (req, res) => {
-    const dbResult = await query("select * from movies limit 50");
+    const { searchTerm } = req.query;
+    const dbResult = await query(
+        "select * from movies where LOWER(name) like LOWER($1) limit 50;",
+        [`%${searchTerm}%`]
+    );
     res.json(dbResult.rows);
 });
 
