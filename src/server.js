@@ -1,7 +1,5 @@
 import { app } from "./support/setupExpress.js";
 import { query } from "./support/db.js";
-import { setupARouteHandlerDemonstratingValidationWithZod } from "./zodDemo/setupARouteHandlerDemonstratingValidationWithZod.js";
-
 //You should delete all of these route handlers and replace them according to your own requirements
 
 app.get("/", (req, res) => {
@@ -20,27 +18,28 @@ app.get("/movies/search", async (req, res) => {
     res.json(dbResult.rows);
 });
 
-//This jsdoc comment helps vscode figure out the correct types for req and res for autocompletion, etc,
-//when it can't figure it out from context.
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- */
-
-//An example route that makes an SQL query to the db.
-app.get("/db-check", async (req, res) => {
+app.get("/movies/:id", async (req, res) => {
     try {
-        const dbResult = await query("select * from my_table");
+        const targetId = parseInt(req.params.id);
+        if (Number.isNaN(targetId)) {
+            res.status(400).json({ error: "Bad request" });
+            return;
+        }
+
+        const dbResult = await query("select * from movies where id = $1;", [
+            targetId,
+        ]);
+
+        if (dbResult.rowCount === 0) {
+            res.status(404).json({ error: "Movie not found" });
+            return;
+        }
+
         res.json(dbResult.rows);
     } catch (error) {
-        console.error("error handling db-check: ", error);
-        //don't forget to send a response back to the client!
-        res.status(500).json({ outcome: "error", message: "see server logs" });
+        res.status(500).json({ error: "Server error: " + error });
     }
 });
-
-//Delete this, too.  It's just a demo for one way to robustly validate user-submitted data.
-setupARouteHandlerDemonstratingValidationWithZod(app);
 
 // use the environment variable PORT, or 4000 as a fallback
 const PORT = process.env.PORT ?? 4000;
