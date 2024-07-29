@@ -21,6 +21,11 @@ app.get("/movies/search", async (req, res) => {
 app.get("/movies/:id", async (req, res) => {
     try {
         const targetId = parseInt(req.params.id);
+        if (Number.isNaN(targetId)) {
+            res.status(400).json({ error: "Bad request" });
+            return;
+        }
+
         const dbResult = await query("select * from movies where id = $1;", [
             targetId,
         ]);
