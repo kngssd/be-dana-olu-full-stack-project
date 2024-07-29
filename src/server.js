@@ -30,6 +30,11 @@ app.get("/movies/:id", async (req, res) => {
             targetId,
         ]);
 
+        if (dbResult.rowCount === 0) {
+            res.status(404).json({ error: "Movie not found" });
+            return;
+        }
+
         res.json(dbResult.rows);
     } catch (error) {
         res.status(500).json({ error: "Server error: " + error });
