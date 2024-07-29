@@ -1,7 +1,5 @@
 import { app } from "./support/setupExpress.js";
 import { query } from "./support/db.js";
-import { setupARouteHandlerDemonstratingValidationWithZod } from "./zodDemo/setupARouteHandlerDemonstratingValidationWithZod.js";
-
 //You should delete all of these route handlers and replace them according to your own requirements
 
 app.get("/", (req, res) => {
@@ -18,6 +16,19 @@ app.get("/movies/search", async (req, res) => {
         [`%${searchTerm}%`]
     );
     res.json(dbResult.rows);
+});
+
+app.get("/movies/:id", async (req, res) => {
+    try {
+        const targetId = parseInt(req.params.id);
+        const dbResult = await query("select * from movies where id = $1;", [
+            targetId,
+        ]);
+
+        res.json(dbResult.rows);
+    } catch (error) {
+        res.status(500).json({ error: "Server error: " + error });
+    }
 });
 
 // use the environment variable PORT, or 4000 as a fallback
