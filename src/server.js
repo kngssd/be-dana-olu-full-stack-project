@@ -26,9 +26,10 @@ app.get("/movies/:id", async (req, res) => {
             return;
         }
 
-        const dbResult = await query("select * from movies where id = $1;", [
-            targetId,
-        ]);
+        const queryString =
+            "select * from movies join movie_abstracts_en on movies.id = movie_abstracts_en.movie_id where movies.id = $1;";
+
+        const dbResult = await query(queryString, [targetId]);
 
         if (dbResult.rowCount === 0) {
             res.status(404).json({ error: "Movie not found" });
