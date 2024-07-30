@@ -27,7 +27,7 @@ app.get("/movies/:id", async (req, res) => {
         }
 
         const queryString =
-            "select * from movies join movie_abstracts_en on movies.id = movie_abstracts_en.movie_id where movies.id = $1;";
+            "select * from movies left join movie_abstracts_en on movies.id = movie_abstracts_en.movie_id where movies.id = $1;";
 
         const dbResult = await query(queryString, [targetId]);
 
