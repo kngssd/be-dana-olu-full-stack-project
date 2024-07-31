@@ -46,14 +46,18 @@ app.post("/movies/:id/comments", async (req, res) => {
     try {
         const commentBody = req.body;
         const movieID = parseInt(req.params.id);
+        const queryString =
+            "INSERT INTO comments (movie_id, comment_text, author) VALUES ($1, $2, $3) RETURNING *";
 
-        const dbResult = await query(
-            "INSERT INTO comments (movie_id, comment_text, author) VALUES ($1, $2, $3) RETURNING *",
-            [movieID, commentBody.comment_text, commentBody.author]
-        );
+        const dbResult = await query(queryString, [
+            movieID,
+            commentBody.comment_text,
+            commentBody.author,
+        ]);
+
         res.json(dbResult.rows);
     } catch (error) {
-        res.status(500).json({ error: "Server error: " + error });
+        res.status(500).json({ error });
     }
 });
 
