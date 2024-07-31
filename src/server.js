@@ -42,6 +42,70 @@ app.get("/movies/:id", async (req, res) => {
     }
 });
 
+app.post("/movies/:id/comments", async (req, res) => {
+    try {
+        const commentBody = req.body;
+        const movieID = parseInt(req.params.id);
+        const queryString =
+            "INSERT INTO comments (movie_id, comment_text, author) VALUES ($1, $2, $3) RETURNING *";
+
+        const dbResult = await query(queryString, [
+            movieID,
+            commentBody.comment_text,
+            commentBody.author,
+        ]);
+
+        res.json(dbResult.rows);
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
+
+app.get("/movies/:id/comments", async (req, res) => {
+    try {
+        const movieID = parseInt(req.params.id);
+        const queryString = "SELECT * FROM comments WHERE movie_id = $1";
+
+        const dbResult = await query(queryString, [movieID]);
+        res.json(dbResult.rows);
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
+
+app.get("/comments", async (req, res) => {
+    try {
+        const queryString = "SELECT * FROM comments";
+
+        const dbResult = await query(queryString);
+        res.json(dbResult.rows);
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
+
+app.get("/comments/:id", async (req, res) => {
+    try {
+        const commentID = parseInt(req.params.id);
+        if (Number.isNaN(commentID)) {
+            res.status(400).json({ error: "Bad request" });
+            return;
+        }
+        const queryString = "SELECT * FROM comments where comment_id = $1";
+
+        const dbResult = await query(queryString, [commentID]);
+
+        if (dbResult.rowCount === 0) {
+            res.status(404).json({ error: "Comment not found" });
+            return;
+        }
+
+        res.json(dbResult.rows);
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
+
 // use the environment variable PORT, or 4000 as a fallback
 const PORT = process.env.PORT ?? 4000;
 
