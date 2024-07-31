@@ -84,6 +84,28 @@ app.get("/comments", async (req, res) => {
     }
 });
 
+app.get("/comments/:id", async (req, res) => {
+    try {
+        const commentID = parseInt(req.params.id);
+        if (Number.isNaN(commentID)) {
+            res.status(400).json({ error: "Bad request" });
+            return;
+        }
+        const queryString = "SELECT * FROM comments where comment_id = $1";
+
+        const dbResult = await query(queryString, [commentID]);
+
+        if (dbResult.rowCount === 0) {
+            res.status(404).json({ error: "Comment not found" });
+            return;
+        }
+
+        res.json(dbResult.rows);
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
+
 // use the environment variable PORT, or 4000 as a fallback
 const PORT = process.env.PORT ?? 4000;
 
