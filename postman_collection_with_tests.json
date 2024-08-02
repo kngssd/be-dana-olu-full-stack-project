@@ -1,0 +1,382 @@
+{
+    "info": {
+        "_postman_id": "135d0afa-4895-4cec-8a34-705b006bf898",
+        "name": "FS Project",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "25218203",
+        "_collection_link": "https://fspod5.postman.co/workspace/FSPOD~dfac320f-af31-469e-8110-bef16331dbbc/collection/25218203-135d0afa-4895-4cec-8a34-705b006bf898?action=share&source=collection_link&creator=25218203"
+    },
+    "item": [
+        {
+            "name": "GET /",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://be-dana-olu-full-stack-project.onrender.com/",
+                    "host": [
+                        "https://be-dana-olu-full-stack-project.onrender.com"
+                    ],
+                    "path": [""]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/search",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Response status code is 200\", function () {",
+                            "  pm.expect(pm.response.code).to.equal(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response has the required fields\", function () {",
+                            "    const responseData = pm.response.json();",
+                            "    ",
+                            "    pm.expect(responseData.rows).to.exist;",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Validate the response content type is application/json\", function () {",
+                            "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                            "});",
+                            "",
+                            ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://be-dana-olu-full-stack-project.onrender.com/movies/search",
+                    "host": [
+                        "https://be-dana-olu-full-stack-project.onrender.com"
+                    ],
+                    "path": ["movies", "search"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/search?searchTerm=...",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://be-dana-olu-full-stack-project.onrender.com/movies/search?searchTerm=batman",
+                    "host": [
+                        "https://be-dana-olu-full-stack-project.onrender.com"
+                    ],
+                    "path": ["movies", "search"],
+                    "query": [
+                        {
+                            "key": "searchTerm",
+                            "value": "batman"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/:id",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Response status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response Content-Type is application/json\", function () {",
+                            "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response time is less than 200ms\", function () {",
+                            "  pm.expect(pm.response.responseTime).to.be.below(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Validate the response has the required fields\", function () {",
+                            "    const responseData = pm.response.json();",
+                            "    ",
+                            "    pm.expect(responseData).to.be.an('array');",
+                            "    responseData.forEach(movie => {",
+                            "        pm.expect(movie).to.include.all.keys(",
+                            "            'id', 'name', 'date', 'kind', 'runtime', 'budget', ",
+                            "            'revenue', 'homepage', 'vote_average', 'votes_count', ",
+                            "            'movie_id', 'abstract'",
+                            "        );",
+                            "    });",
+                            "});",
+                            ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://be-dana-olu-full-stack-project.onrender.com/movies/115",
+                    "host": [
+                        "https://be-dana-olu-full-stack-project.onrender.com"
+                    ],
+                    "path": ["movies", ":id"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "POST /movies/:id/comments",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Response status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response time is less than 500ms\", function () {",
+                            "  pm.expect(pm.response.responseTime).to.be.below(500);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response has the required fields for comment schema validation\", function () {",
+                            "    const responseData = pm.response.json();",
+                            "",
+                            "    pm.expect(responseData).to.be.an('object');",
+                            "    pm.expect(responseData).to.have.property('movieId').that.is.a('string');",
+                            "    pm.expect(responseData).to.have.property('userId').that.is.a('string');",
+                            "    pm.expect(responseData).to.have.property('comment').that.is.a('string');",
+                            "    pm.expect(responseData).to.have.property('createdAt').that.is.a('string');",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Comment ID is a non-empty string\", function () {",
+                            "  const responseData = pm.response.json();",
+                            "  ",
+                            "  pm.expect(responseData.commentId).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Comment ID should not be empty\");",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"User ID is a non-empty string\", function () {",
+                            "  const responseData = pm.response.json();",
+                            "  ",
+                            "  pm.expect(responseData).to.be.an('object');",
+                            "  pm.expect(responseData.userId).to.be.a('string').and.to.have.lengthOf.at.least(1, \"User ID should be a non-empty string\");",
+                            "});",
+                            ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"author\": \"Olu\",\n    \"comment_text\": \"test 2 from Postman\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "https://be-dana-olu-full-stack-project.onrender.com/movies/98411/comments",
+                    "host": [
+                        "https://be-dana-olu-full-stack-project.onrender.com"
+                    ],
+                    "path": ["movies", ":id", "comments"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/:id/comment",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Response status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response time is less than 200ms\", function () {",
+                            "  pm.expect(pm.response.responseTime).to.be.below(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response schema includes required fields for comments\", function () {",
+                            "    const responseData = pm.response.json();",
+                            "    ",
+                            "    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+                            "",
+                            "    responseData.forEach(function(comment) {",
+                            "        pm.expect(comment).to.have.property('commentId');",
+                            "        pm.expect(comment).to.have.property('userId');",
+                            "        pm.expect(comment).to.have.property('movieId');",
+                            "        pm.expect(comment).to.have.property('commentText');",
+                            "        pm.expect(comment).to.have.property('createdAt');",
+                            "    });",
+                            "});",
+                            ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://be-dana-olu-full-stack-project.onrender.com/movies/98411/comments",
+                    "host": [
+                        "https://be-dana-olu-full-stack-project.onrender.com"
+                    ],
+                    "path": ["movies", ":id", "comments"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET /comments",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Response status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response time is within an acceptable range\", function () {",
+                            "  pm.expect(pm.response.responseTime).to.be.below(500);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response has the required fields\", function () {",
+                            "    const responseData = pm.response.json();",
+                            "",
+                            "    pm.expect(responseData).to.be.an('array');",
+                            "    responseData.forEach(comment => {",
+                            "        pm.expect(comment).to.have.property('comment_id');",
+                            "        pm.expect(comment).to.have.property('movie_id');",
+                            "        pm.expect(comment).to.have.property('comment_text');",
+                            "        pm.expect(comment).to.have.property('author');",
+                            "        pm.expect(comment).to.have.property('creation_time');",
+                            "    });",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Comment text is a non-empty string\", function () {",
+                            "    const responseData = pm.response.json();",
+                            "    ",
+                            "    responseData.forEach(function(comment) {",
+                            "        pm.expect(comment.comment_text).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Comment text should not be empty\");",
+                            "    });",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Creation time is in a valid date format\", function () {",
+                            "    const responseData = pm.response.json();",
+                            "    ",
+                            "    responseData.forEach(function(comment) {",
+                            "        pm.expect(comment.creation_time).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/);",
+                            "    });",
+                            "});",
+                            ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://be-dana-olu-full-stack-project.onrender.com/comments",
+                    "host": [
+                        "https://be-dana-olu-full-stack-project.onrender.com"
+                    ],
+                    "path": ["comments"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET /comments/:id",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Response status code is 200\", function () {",
+                            "    pm.expect(pm.response.code).to.equal(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response time is less than 200ms\", function () {",
+                            "  pm.expect(pm.response.responseTime).to.be.below(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response body should have the correct schema for the 'comments' endpoint\", function () {",
+                            "    const responseData = pm.response.json();",
+                            "    ",
+                            "    pm.expect(responseData).to.be.an('array');",
+                            "    responseData.forEach(function(comment) {",
+                            "        pm.expect(comment).to.be.an('object');",
+                            "        pm.expect(comment).to.have.property('id');",
+                            "        pm.expect(comment).to.have.property('text');",
+                            "        pm.expect(comment).to.have.property('user');",
+                            "        pm.expect(comment.user).to.be.an('object');",
+                            "        pm.expect(comment.user).to.have.property('id');",
+                            "        pm.expect(comment.user).to.have.property('name');",
+                            "    });",
+                            "});",
+                            ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://be-dana-olu-full-stack-project.onrender.com/comments/56",
+                    "host": [
+                        "https://be-dana-olu-full-stack-project.onrender.com"
+                    ],
+                    "path": ["comments", ":id"]
+                }
+            },
+            "response": []
+        }
+    ]
+}

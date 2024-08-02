@@ -1,0 +1,34 @@
+openapi: 3.0.3
+info:
+    title: FS Project
+    version: 1.0.0
+    contact: {}
+servers:
+    # Added by API Auto Mocking Plugin
+    - description: SwaggerHub API Auto Mocking
+      url: https://virtserver.swaggerhub.com/COKEROLU94/fs-project/1.0.0
+    - url: https://be-dana-olu-full-stack-project.onrender.com/
+paths:
+    /:
+        get:
+            summary: GET /
+            description: GET /
+            operationId: get
+            responses:
+                "200":
+                    description: ""
+    /movies/search:
+        get:
+            summary: GET /movies/search
+            description: GET /movies/search
+            operationId: getMoviesSearch
+            parameters:
+                - name: searchTerm
+                  in: query
+                  schema:
+                      type: string
+                      example: batman
+            responses:
+                "200":
+                    description: ""
+tags: []
