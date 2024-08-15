@@ -1,6 +1,30 @@
 import { app } from "./support/setupExpress.js";
 import { query } from "./support/db.js";
+import { connect } from "amqplib";
 //You should delete all of these route handlers and replace them according to your own requirements
+
+function getEnvironmentVariableOrFail(keyString) {
+    const value = process.env[keyString];
+    if (value === undefined || value === null || value === "") {
+        throw new Error("missing exchange URL environment variable");
+    }
+    return value;
+}
+
+// const setupMQ = async () => {
+//     const exchangeURL = getEnvironmentVariableOrFail("AMQP_EXCHANGE_URL");
+//     const conn = await connect(exchangeURL);
+//     const queueName = "dana-olu";
+//     const channel = await conn.createChannel();
+
+//     await channel.assertQueue(queueName, { durable: false });
+//     console.log("Sender ready to start sending messages to channel");
+
+//     const msgToSend = Buffer.from(newCommentObject);
+//     channel.sendToQueue(queueName, msgToSend);
+// };
+
+// setupMQ();
 
 app.get("/", (req, res) => {
     res.json({
@@ -42,6 +66,9 @@ app.get("/movies/:id", async (req, res) => {
     }
 });
 
+const exchangeURL = getEnvironmentVariableOrFail("AMQP_EXCHANGE_URL");
+const queueName = "dana-olu";
+
 app.post("/movies/:id/comments", async (req, res) => {
     try {
         const commentBody = req.body;
@@ -54,6 +81,15 @@ app.post("/movies/:id/comments", async (req, res) => {
             commentBody.comment_text,
             commentBody.author,
         ]);
+
+        const conn = await connect(exchangeURL);
+        const channel = await conn.createChannel();
+
+        await channel.assertQueue(queueName, { durable: false });
+        console.log("Sender ready to start sending messages to channel");
+
+        const msgToSend = Buffer.from(commentBody.comment_text);
+        channel.sendToQueue(queueName, msgToSend);
 
         res.json(dbResult.rows);
     } catch (error) {
