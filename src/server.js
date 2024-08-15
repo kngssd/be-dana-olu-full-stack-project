@@ -11,16 +11,20 @@ function getEnvironmentVariableOrFail(keyString) {
     return value;
 }
 
-const setupMQ = async () => {
-    const exchangeURL = getEnvironmentVariableOrFail("AMQP_EXCHANGE_URL");
-    const conn = await connect(exchangeURL);
-    const queueName = "dana-olu";
-    const channel = await conn.createChannel();
+// const setupMQ = async () => {
+//     const exchangeURL = getEnvironmentVariableOrFail("AMQP_EXCHANGE_URL");
+//     const conn = await connect(exchangeURL);
+//     const queueName = "dana-olu";
+//     const channel = await conn.createChannel();
 
-    await channel.assertQueue(queueName, { durable: false });
-    console.log("Sender ready to start sending messages to channel");
-};
-setupMQ();
+//     await channel.assertQueue(queueName, { durable: false });
+//     console.log("Sender ready to start sending messages to channel");
+
+//     const msgToSend = Buffer.from(newCommentObject);
+//     channel.sendToQueue(queueName, msgToSend);
+// };
+
+// setupMQ();
 
 app.get("/", (req, res) => {
     res.json({
@@ -62,6 +66,9 @@ app.get("/movies/:id", async (req, res) => {
     }
 });
 
+const exchangeURL = getEnvironmentVariableOrFail("AMQP_EXCHANGE_URL");
+const queueName = "dana-olu";
+
 app.post("/movies/:id/comments", async (req, res) => {
     try {
         const commentBody = req.body;
@@ -75,9 +82,16 @@ app.post("/movies/:id/comments", async (req, res) => {
             commentBody.author,
         ]);
 
-        res.json(dbResult.rows);
+        const conn = await connect(exchangeURL);
+        const channel = await conn.createChannel();
 
-        const msgToSend = Buffer.from(commentBody);
+        await channel.assertQueue(queueName, { durable: false });
+        console.log("Sender ready to start sending messages to channel");
+
+        const msgToSend = Buffer.from(commentBody.comment_text);
+        channel.sendToQueue(queueName, msgToSend);
+
+        res.json(dbResult.rows);
     } catch (error) {
         res.status(500).json({ error });
     }
