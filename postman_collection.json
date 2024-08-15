@@ -1,0 +1,159 @@
+{
+    "info": {
+        "_postman_id": "135d0afa-4895-4cec-8a34-705b006bf898",
+        "name": "FS Project",
+        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+        "_exporter_id": "36868686",
+        "_collection_link": "https://fspod5.postman.co/workspace/FSPOD~dfac320f-af31-469e-8110-bef16331dbbc/collection/25218203-135d0afa-4895-4cec-8a34-705b006bf898?action=share&source=collection_link&creator=36868686"
+    },
+    "item": [
+        {
+            "name": "GET /",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/"
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/search",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Response status code is 200\", function () {",
+                            "  pm.expect(pm.response.code).to.equal(200);",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Response has the required fields\", function () {",
+                            "    const responseData = pm.response.json();",
+                            "    ",
+                            "    pm.expect(responseData.rows).to.exist;",
+                            "});",
+                            "",
+                            "",
+                            "pm.test(\"Validate the response content type is application/json\", function () {",
+                            "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                            "});",
+                            "",
+                            ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/movies/search"
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/search?searchTerm=...",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://be-dana-olu-full-stack-project.onrender.com/movies/search?searchTerm=batman",
+                    "host": [
+                        "https://be-dana-olu-full-stack-project.onrender.com"
+                    ],
+                    "path": ["movies", "search"],
+                    "query": [
+                        {
+                            "key": "searchTerm",
+                            "value": "batman"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/:id",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/movies/115"
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/:id - 404",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/movies/60"
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/:id - bad request",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/movies/test"
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/:id null abstract",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/movies/99096"
+            },
+            "response": []
+        },
+        {
+            "name": "POST /movies/:id/comments",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"author\": \"Olu\",\n    \"comment_text\": \"test 2 from Postman\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/movies/98411/comments"
+            },
+            "response": []
+        },
+        {
+            "name": "GET /movies/:id/comment",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/movies/98411/comments"
+            },
+            "response": []
+        },
+        {
+            "name": "GET /comments",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/comments"
+            },
+            "response": []
+        },
+        {
+            "name": "GET /comments/:id",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "https://be-dana-olu-full-stack-project.onrender.com/comments/1"
+            },
+            "response": []
+        }
+    ]
+}
